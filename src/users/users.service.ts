@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DATABASE_CONNECTION } from '../database/database-connection';
 import * as schema from './schema';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { hash } from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
@@ -15,6 +16,9 @@ export class UsersService {
   }
 
   async createUser(user: typeof schema.users.$inferInsert) {
-    await this.database.insert(schema.users).values(user);
+    const hashedPassword = await hash(user.password || '', 10);
+    await this.database
+      .insert(schema.users)
+      .values({ ...user, password: hashedPassword });
   }
 }
