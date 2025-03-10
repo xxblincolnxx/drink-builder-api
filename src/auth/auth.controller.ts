@@ -1,11 +1,20 @@
-import { Controller, Post, UseGuards } from '@nestjs/common';
+import { Controller, Post, Res, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { CurrentUser } from './current-user.decorator';
+import { User } from '../users/dto/create-user.request';
+import { Response } from 'express';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  async login() {
-    // This is where we'll create a JWT token and return it to the client. It will then use JWT to authenticate itself in future requests.
+  async login(
+    @CurrentUser() user: User,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    await this.authService.login(user, response);
   }
 }
