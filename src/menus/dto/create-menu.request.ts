@@ -1,4 +1,4 @@
-export interface CreateMenuRequest {
+export class CreateMenuRequest {
   title: string;
   userId: number;
 }

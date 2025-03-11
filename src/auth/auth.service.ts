@@ -42,9 +42,9 @@ export class AuthService {
     });
   }
 
-  async verifyUser(email: string, password: string) {
+  async verifyUser(email: string, password: string): Promise<User> {
     try {
-      const user = await this.usersService.getUser(email);
+      const user = await this.usersService.getUser({ email, id: null });
       const authenticated = await compare(password, user.password);
       if (!authenticated) {
         throw new UnauthorizedException();

@@ -4,6 +4,12 @@ import * as schema from './schema';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { hash } from 'bcryptjs';
 import { eq } from 'drizzle-orm';
+import { User } from './dto/create-user.request';
+
+interface GetUserArgs {
+  email: string | null;
+  id: string | null;
+}
 
 @Injectable()
 export class UsersService {
@@ -16,9 +22,16 @@ export class UsersService {
     return this.database.query.users.findMany();
   }
 
-  async getUser(email: string) {
+  async getUser(args: GetUserArgs) {
+    if (args.email === null && args.id === null) {
+      throw new Error('Email or id must be provided');
+    }
+
+    const whereKey = args.email ? schema.users.email : schema.users.id;
+    const whereValue = args.email ? args.email : args.id;
+
     const user = await this.database.query.users.findMany({
-      where: eq(schema.users.email, email),
+      where: eq(whereKey, whereValue!),
     });
 
     if (user.length < 1) {
@@ -32,5 +45,14 @@ export class UsersService {
     await this.database
       .insert(schema.users)
       .values({ ...user, password: hashedPassword });
+  }
+
+  async getUserMenus(user: User) {
+    return this.database.query.users.findFirst({
+      where: eq(schema.users.email, user.email),
+      with: {
+        menus: true,
+      },
+    });
   }
 }
