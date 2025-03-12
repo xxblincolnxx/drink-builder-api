@@ -15,31 +15,48 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async login(user: User, response: Response) {
-    const expiresTime = new Date();
-    expiresTime.setMilliseconds(
-      expiresTime.getTime() +
-        parseInt(
-          this.configService.getOrThrow<string>(
-            'JWT_ACCESS_TOKEN_EXPIRATION_MS',
-          ),
-        ),
-    );
-    const tokenPayload: TokenPayload = {
-      userId: user.id.toString(),
-    };
+    const accessTokenSecret = 'JWT_ACCESS_TOKEN_SECRET';
+    const accessTokenExpiration = 'JWT_ACCESS_TOKEN_EXPIRATION_MS';
+    const { expiresTime: expiresTimeAccess, token: accessToken } =
+      this.createToken(user, accessTokenSecret, accessTokenExpiration);
 
-    const accessToken = this.jwtService.sign(tokenPayload, {
-      secret: this.configService.getOrThrow<string>('JWT_ACCESS_TOKEN_SECRET'),
-      expiresIn: `${this.configService.getOrThrow('JWT_ACCESS_TOKEN_EXPIRATION_MS')}ms`,
-    });
+    const refreshTokenSecret = 'JWT_REFRESH_TOKEN_SECRET';
+    const refreshTokenExpiration = 'JWT_REFRESH_TOKEN_EXPIRATION_MS';
+    const { expiresTime: expiresTimeRefresh, token: refreshToken } =
+      this.createToken(user, refreshTokenSecret, refreshTokenExpiration);
+
+    await this.usersService.updateUserRefreshToken(user, refreshToken);
 
     response.cookie('Authentication', accessToken, {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
-      expires: expiresTime,
+      expires: expiresTimeAccess,
     });
+
+    response.cookie('Refresh', refreshToken, {
+      httpOnly: true,
+      secure: this.configService.get('NODE_ENV') === 'production',
+      expires: expiresTimeRefresh,
+    });
+  }
+
+  private createToken(user: User, secretKey: string, expKey: string) {
+    const expiresTime = new Date();
+    expiresTime.setMilliseconds(
+      expiresTime.getTime() +
+        parseInt(this.configService.getOrThrow<string>(expKey)),
+    );
+
+    const tokenPayload: TokenPayload = {
+      userId: user.id.toString(),
+    };
+
+    const token = this.jwtService.sign(tokenPayload, {
+      secret: this.configService.getOrThrow<string>(secretKey),
+      expiresIn: `${this.configService.getOrThrow(expKey)}ms`,
+    });
+    return { expiresTime, token };
   }
 
   async verifyUser(email: string, password: string): Promise<User> {

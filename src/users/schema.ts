@@ -6,6 +6,7 @@ export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   email: text('email').unique().notNull(),
   password: text('password').notNull(),
+  refreshToken: text('refresh_token'),
 });
 
 export const userRelations = relations(users, ({ many }) => ({

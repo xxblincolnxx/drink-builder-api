@@ -47,6 +47,14 @@ export class UsersService {
       .values({ ...user, password: hashedPassword });
   }
 
+  async updateUserRefreshToken(user: User, token: string) {
+    const hashedToken = await hash(token, 10);
+    await this.database
+      .update(schema.users)
+      .set({ refreshToken: hashedToken })
+      .where(eq(schema.users.email, user.email));
+  }
+
   async getUserMenus(user: User) {
     return this.database.query.users.findFirst({
       where: eq(schema.users.email, user.email),
