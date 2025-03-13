@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { compare } from 'bcryptjs';
@@ -5,7 +6,13 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/dto/create-user.request';
 import { Response } from 'express';
-import { TokenPayload } from './token-payload.interface';
+import { TokenPayload } from './utils/token-payload.interface';
+import {
+  accessTokenExpiration,
+  accessTokenSecret,
+  refreshTokenExpiration,
+  refreshTokenSecret,
+} from './utils/constants';
 
 @Injectable()
 export class AuthService {
@@ -16,13 +23,9 @@ export class AuthService {
   ) {}
 
   async login(user: User, response: Response) {
-    const accessTokenSecret = 'JWT_ACCESS_TOKEN_SECRET';
-    const accessTokenExpiration = 'JWT_ACCESS_TOKEN_EXPIRATION_MS';
     const { expiresTime: expiresTimeAccess, token: accessToken } =
       this.createToken(user, accessTokenSecret, accessTokenExpiration);
 
-    const refreshTokenSecret = 'JWT_REFRESH_TOKEN_SECRET';
-    const refreshTokenExpiration = 'JWT_REFRESH_TOKEN_EXPIRATION_MS';
     const { expiresTime: expiresTimeRefresh, token: refreshToken } =
       this.createToken(user, refreshTokenSecret, refreshTokenExpiration);
 
@@ -39,6 +42,11 @@ export class AuthService {
       secure: this.configService.get('NODE_ENV') === 'production',
       expires: expiresTimeRefresh,
     });
+  }
+
+  async logout(response: Response) {
+    response.clearCookie('Authentication');
+    response.clearCookie('Refresh');
   }
 
   private createToken(user: User, secretKey: string, expKey: string) {
@@ -69,6 +77,22 @@ export class AuthService {
       return user;
     } catch {
       throw new UnauthorizedException('Invalid Credentials');
+    }
+  }
+
+  async verifyUserRefreshToken(refreshToken: string, userId: string) {
+    try {
+      const user = await this.usersService.getUser({ email: null, id: userId });
+      const authenticated = user.refreshToken
+        ? await compare(refreshToken, user.refreshToken)
+        : false;
+
+      if (!authenticated) {
+        throw new UnauthorizedException();
+      }
+      return user;
+    } catch {
+      throw new UnauthorizedException('Refresh token is not valid');
     }
   }
 }
