@@ -20,8 +20,12 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Res({ passthrough: true }) response: Response) {
-    await this.authService.logout(response);
+  @UseGuards(JwtRefreshAuthGuard)
+  async logout(
+    @CurrentUser() user: User,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    await this.authService.logout(user, response);
   }
 
   @Post('refresh')

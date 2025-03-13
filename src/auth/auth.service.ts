@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/require-await */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { compare } from 'bcryptjs';
@@ -44,16 +43,18 @@ export class AuthService {
     });
   }
 
-  async logout(response: Response) {
+  async logout(user: User, response: Response) {
+    await this.usersService.updateUserRefreshToken(user, null);
     response.clearCookie('Authentication');
     response.clearCookie('Refresh');
   }
 
-  private createToken(user: User, secretKey: string, expKey: string) {
+  private createToken(user: User, secretKey: string, expiresKey: string) {
+    // TODO: this isn't right, we end up with dates far into the future. Probably need moment.js
     const expiresTime = new Date();
     expiresTime.setMilliseconds(
       expiresTime.getTime() +
-        parseInt(this.configService.getOrThrow<string>(expKey)),
+        parseInt(this.configService.getOrThrow<string>(expiresKey)),
     );
 
     const tokenPayload: TokenPayload = {
@@ -62,7 +63,7 @@ export class AuthService {
 
     const token = this.jwtService.sign(tokenPayload, {
       secret: this.configService.getOrThrow<string>(secretKey),
-      expiresIn: `${this.configService.getOrThrow(expKey)}ms`,
+      expiresIn: `${this.configService.getOrThrow(expiresKey)}ms`,
     });
     return { expiresTime, token };
   }

@@ -47,8 +47,8 @@ export class UsersService {
       .values({ ...user, password: hashedPassword });
   }
 
-  async updateUserRefreshToken(user: User, token: string) {
-    const hashedToken = await hash(token, 10);
+  async updateUserRefreshToken(user: User, token: string | null) {
+    const hashedToken = token ? await hash(token, 10) : null;
     await this.database
       .update(schema.users)
       .set({ refreshToken: hashedToken })
