@@ -40,6 +40,7 @@ export class AuthService {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
       expires: expiresTimeRefresh,
+      path: '/auth/refresh',
     });
   }
 
@@ -51,10 +52,8 @@ export class AuthService {
 
   private createToken(user: User, secretKey: string, expiresKey: string) {
     // TODO: this isn't right, we end up with dates far into the future. Probably need moment.js
-    const expiresTime = new Date();
-    expiresTime.setMilliseconds(
-      expiresTime.getTime() +
-        parseInt(this.configService.getOrThrow<string>(expiresKey)),
+    const expiresTime = new Date(
+      Date.now() + parseInt(this.configService.getOrThrow<string>(expiresKey)),
     );
 
     const tokenPayload: TokenPayload = {
