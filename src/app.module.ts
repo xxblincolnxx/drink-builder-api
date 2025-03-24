@@ -6,6 +6,7 @@ import { MenusModule } from './menus/menus.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
 import { BranchesModule } from './branches/branches.module';
+import { OrganizationsModule } from './organizations/organizations.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { BranchesModule } from './branches/branches.module';
     MenusModule,
     AuthModule,
     BranchesModule,
+    OrganizationsModule,
   ],
   controllers: [],
   providers: [UsersService],
