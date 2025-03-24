@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { MenusModule } from './menus/menus.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
+import { BranchesModule } from './branches/branches.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UsersService } from './users/users.service';
     UsersModule,
     MenusModule,
     AuthModule,
+    BranchesModule,
   ],
   controllers: [],
   providers: [UsersService],
