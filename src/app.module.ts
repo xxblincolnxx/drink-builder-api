@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
 import { BranchesModule } from './branches/branches.module';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { DrinksModule } from './drinks/drinks.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
     AuthModule,
     BranchesModule,
     OrganizationsModule,
+    DrinksModule,
   ],
   controllers: [],
   providers: [UsersService],
