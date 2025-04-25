@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { drinksToMenus } from '../other_schemas/drinks_to_menus';
+import { drinksToInventory } from '../other_schemas/drinks_to_inventory';
 
 export const drinks = pgTable('drinks', {
   id: serial('id').primaryKey(),
@@ -10,4 +11,5 @@ export const drinks = pgTable('drinks', {
 
 export const drinksRelations = relations(drinks, ({ many }) => ({
   drinksToMenus: many(drinksToMenus),
+  drinksToInventory: many(drinksToInventory),
 }));
