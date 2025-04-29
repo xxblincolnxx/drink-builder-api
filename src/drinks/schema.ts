@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, serial, text } from 'drizzle-orm/pg-core';
-import { drinksToMenus } from '../other_schemas/drinks_to_menus';
-import { drinksToInventory } from '../other_schemas/drinks_to_inventory';
+import { drinksToMenus } from '../utilities/other_schemas/drinks_to_menus';
+import { drinksToInventory } from '../utilities/other_schemas/drinks_to_inventory';
 
 export const drinks = pgTable('drinks', {
   id: serial('id').primaryKey(),

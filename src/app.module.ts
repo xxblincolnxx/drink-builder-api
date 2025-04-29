@@ -9,6 +9,7 @@ import { BranchesModule } from './branches/branches.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { DrinksModule } from './drinks/drinks.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { VendorsModule } from './vendors/vendors.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { InventoryModule } from './inventory/inventory.module';
     OrganizationsModule,
     DrinksModule,
     InventoryModule,
+    VendorsModule,
   ],
   controllers: [],
   providers: [UsersService],

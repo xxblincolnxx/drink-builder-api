@@ -10,7 +10,8 @@ import {
 } from 'drizzle-orm/pg-core';
 import { users } from '../users/schema';
 import { branches } from '../branches/schema';
-import { drinksToInventory } from '../other_schemas/drinks_to_inventory';
+import { vendors } from '../vendors/schema';
+import { drinksToInventory } from '../utilities/other_schemas/drinks_to_inventory';
 
 export const inventory = pgTable('inventory', {
   id: serial('id').primaryKey(),
@@ -23,6 +24,7 @@ export const inventory = pgTable('inventory', {
   inStock: integer('in_stock').notNull(),
   buyerId: integer('buyer_id').references(() => users.id),
   branchId: integer('branch_id').references(() => branches.id),
+  vendorId: integer('vendor_id').references(() => vendors.id),
 });
 
 export const inventoryRelations = relations(inventory, ({ one, many }) => ({
@@ -33,6 +35,10 @@ export const inventoryRelations = relations(inventory, ({ one, many }) => ({
   branch: one(branches, {
     fields: [inventory.branchId],
     references: [branches.id],
+  }),
+  vendor: one(vendors, {
+    fields: [inventory.vendorId],
+    references: [vendors.id],
   }),
   drinksToInventory: many(drinksToInventory),
 }));

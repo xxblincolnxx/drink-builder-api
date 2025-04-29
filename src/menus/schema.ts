@@ -8,7 +8,7 @@ import {
 import { users } from '../users/schema';
 import { relations } from 'drizzle-orm';
 import { branches } from '../branches/schema';
-import { drinksToMenus } from '../other_schemas/drinks_to_menus';
+import { drinksToMenus } from '../utilities/other_schemas/drinks_to_menus';
 
 export const menus = pgTable('menus', {
   id: serial('id').primaryKey(),
