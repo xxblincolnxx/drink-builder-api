@@ -14,6 +14,7 @@ import { MixersModule } from './mixers/mixers.module';
 import { CategoriesModule } from './categories/categories.module';
 import { SpiritsModule } from './spirits/spirits.module';
 import { BottlesModule } from './bottles/bottles.module';
+import { IdentifiersModule } from './identifiers/identifiers.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { BottlesModule } from './bottles/bottles.module';
     CategoriesModule,
     SpiritsModule,
     BottlesModule,
+    IdentifiersModule,
   ],
   controllers: [],
   providers: [UsersService],

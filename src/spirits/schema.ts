@@ -2,6 +2,7 @@ import { relations } from 'drizzle-orm';
 import { pgTable, text, uuid, varchar } from 'drizzle-orm/pg-core';
 import { categories } from '../categories/schema';
 import { bottles } from '../bottles/schema';
+import { identifiers } from '../identifiers/schema';
 
 export const spirits = pgTable('spirits', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -18,4 +19,5 @@ export const spiritsRelations = relations(spirits, ({ one, many }) => ({
     references: [categories.id],
   }),
   bottles: many(bottles),
+  identifiers: many(identifiers),
 }));
