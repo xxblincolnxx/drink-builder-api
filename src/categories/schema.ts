@@ -8,6 +8,6 @@ export const categories = pgTable('categories', {
   description: text('description'),
 });
 
-export const vendorsRelations = relations(categories, ({ many }) => ({
+export const categoriesRelations = relations(categories, ({ many }) => ({
   mixers: many(mixers),
 }));
