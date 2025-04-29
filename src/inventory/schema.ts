@@ -12,6 +12,7 @@ import { users } from '../users/schema';
 import { branches } from '../branches/schema';
 import { vendors } from '../vendors/schema';
 import { drinksToInventory } from '../utilities/other_schemas/drinks_to_inventory';
+import { mixers } from '../mixers/schema';
 
 export const inventory = pgTable('inventory', {
   id: serial('id').primaryKey(),
@@ -25,6 +26,7 @@ export const inventory = pgTable('inventory', {
   buyerId: integer('buyer_id').references(() => users.id),
   branchId: integer('branch_id').references(() => branches.id),
   vendorId: integer('vendor_id').references(() => vendors.id),
+  mixerId: integer('mixer_id').references(() => mixers.id),
 });
 
 export const inventoryRelations = relations(inventory, ({ one, many }) => ({
@@ -39,6 +41,10 @@ export const inventoryRelations = relations(inventory, ({ one, many }) => ({
   vendor: one(vendors, {
     fields: [inventory.vendorId],
     references: [vendors.id],
+  }),
+  mixer: one(mixers, {
+    fields: [inventory.mixerId],
+    references: [mixers.id],
   }),
   drinksToInventory: many(drinksToInventory),
 }));

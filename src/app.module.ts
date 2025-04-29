@@ -10,6 +10,8 @@ import { OrganizationsModule } from './organizations/organizations.module';
 import { DrinksModule } from './drinks/drinks.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { VendorsModule } from './vendors/vendors.module';
+import { MixersModule } from './mixers/mixers.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { VendorsModule } from './vendors/vendors.module';
     DrinksModule,
     InventoryModule,
     VendorsModule,
+    MixersModule,
+    CategoriesModule,
   ],
   controllers: [],
   providers: [UsersService],
