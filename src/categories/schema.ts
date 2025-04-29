@@ -1,9 +1,9 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, serial, text, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, text, uuid, varchar } from 'drizzle-orm/pg-core';
 import { mixers } from '../mixers/schema';
 
 export const categories = pgTable('categories', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   description: text('description'),
 });

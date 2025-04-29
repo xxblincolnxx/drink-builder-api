@@ -1,14 +1,14 @@
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { users } from '../users/schema';
 import { menus } from '../menus/schema';
 import { organizations } from '../organizations/schema';
 import { inventory } from '../inventory/schema';
 
 export const branches = pgTable('branches', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: varchar({ length: 256 }).notNull(),
-  organizationId: integer('organization_id').references(() => organizations.id),
+  organizationId: uuid('organization_id').references(() => organizations.id),
 });
 
 export const branchRelations = relations(branches, ({ many, one }) => ({

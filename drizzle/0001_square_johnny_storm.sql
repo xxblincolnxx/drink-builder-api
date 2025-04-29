@@ -1,0 +1,1 @@
+ALTER TABLE "inventory" ADD CONSTRAINT "check_one_foreign_key" CHECK ((bottle_id IS NOT NULL) OR (mixer_id IS NOT NULL));

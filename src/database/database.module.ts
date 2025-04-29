@@ -13,6 +13,7 @@ import * as vendorsSchema from '../vendors/schema';
 import * as mixersSchema from '../mixers/schema';
 import * as categoriesSchema from '../categories/schema';
 import * as spiritsSchema from '../spirits/schema';
+import * as bottlesSchema from '../bottles/schema';
 import * as drinksToMenusSchema from '../utilities/other_schemas/drinks_to_menus';
 import * as drinksToInventorySchema from '../utilities/other_schemas/drinks_to_inventory';
 
@@ -36,6 +37,7 @@ import * as drinksToInventorySchema from '../utilities/other_schemas/drinks_to_i
             ...mixersSchema,
             ...categoriesSchema,
             ...spiritsSchema,
+            ...bottlesSchema,
             ...drinksToMenusSchema,
             ...drinksToInventorySchema,
           },

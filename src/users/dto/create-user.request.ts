@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { IsEmail, IsStrongPassword } from 'class-validator';
 
 export class CreateUserRequest {
@@ -9,8 +8,9 @@ export class CreateUserRequest {
   password: string;
 }
 
+// TODO: This isn't quite the place for this. I'm keeping it here for now to keep TS happy.
 export interface User {
-  id: number;
+  id: string;
   email: string;
   password: string;
 }

@@ -13,6 +13,7 @@ import { VendorsModule } from './vendors/vendors.module';
 import { MixersModule } from './mixers/mixers.module';
 import { CategoriesModule } from './categories/categories.module';
 import { SpiritsModule } from './spirits/spirits.module';
+import { BottlesModule } from './bottles/bottles.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { SpiritsModule } from './spirits/spirits.module';
     MixersModule,
     CategoriesModule,
     SpiritsModule,
+    BottlesModule,
   ],
   controllers: [],
   providers: [UsersService],

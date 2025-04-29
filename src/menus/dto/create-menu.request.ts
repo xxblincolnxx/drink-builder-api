@@ -1,4 +1,4 @@
 export class CreateMenuRequest {
   title: string;
-  userId: number;
+  userId: string;
 }

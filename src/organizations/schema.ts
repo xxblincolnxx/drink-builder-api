@@ -1,9 +1,9 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { branches } from '../branches/schema';
 
 export const organizations = pgTable('organizations', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey(),
   name: varchar({ length: 256 }).notNull(),
 });
 

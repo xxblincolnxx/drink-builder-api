@@ -1,13 +1,19 @@
-import { integer, pgTable, primaryKey, varchar } from 'drizzle-orm/pg-core';
-import { inventory } from '../inventory/schema';
-import { drinks } from '../drinks/schema';
+import {
+  integer,
+  pgTable,
+  primaryKey,
+  varchar,
+  uuid,
+} from 'drizzle-orm/pg-core';
+import { inventory } from '../../inventory/schema';
+import { drinks } from '../../drinks/schema';
 import { relations } from 'drizzle-orm';
 
 export const drinksToInventory = pgTable(
   'drinks_to_inventory',
   {
-    inventoryId: integer('inventory_id').references(() => inventory.id),
-    drinkId: integer('drink_id').references(() => drinks.id),
+    inventoryId: uuid('inventory_id').references(() => inventory.id),
+    drinkId: uuid('drink_id').references(() => drinks.id),
     // This will be the amount used in a drink recipe. Use the unit to determine what the amount is of.
     amount: integer('amount'),
     unit: varchar('unit'),

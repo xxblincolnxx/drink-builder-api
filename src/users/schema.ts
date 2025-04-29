@@ -1,15 +1,15 @@
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
+import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { menus } from '../menus/schema';
 import { branches } from '../branches/schema';
 import { inventory } from '../inventory/schema';
 
 export const users = pgTable('users', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   email: text('email').unique().notNull(),
   password: text('password').notNull(),
   refreshToken: text('refresh_token'),
-  branchId: integer('branch_id').references(() => branches.id),
+  branchId: uuid('branch_id').references(() => branches.id),
 });
 
 export const userRelations = relations(users, ({ many, one }) => ({
