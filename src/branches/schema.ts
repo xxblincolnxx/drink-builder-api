@@ -20,5 +20,3 @@ export const branchRelations = relations(branches, ({ many, one }) => ({
     references: [organizations.id],
   }),
 }));
-
-// TODO: Will need Spirit and Mixer inventories too.

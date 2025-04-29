@@ -3,7 +3,6 @@ import { UsersService } from '../users/users.service';
 import { compare } from 'bcryptjs';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../users/dto/create-user.request';
 import { Response } from 'express';
 import { TokenPayload } from './utils/token-payload.interface';
 import {
@@ -12,6 +11,7 @@ import {
   refreshTokenExpiration,
   refreshTokenSecret,
 } from './utils/constants';
+import { UserDto } from '../utilities/types/UserDto';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +21,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(user: User, response: Response) {
+  async login(user: UserDto, response: Response) {
     const { expiresTime: expiresTimeAccess, token: accessToken } =
       this.createToken(user, accessTokenSecret, accessTokenExpiration);
 
@@ -44,19 +44,19 @@ export class AuthService {
     });
   }
 
-  async logout(user: User, response: Response) {
+  async logout(user: UserDto, response: Response) {
     await this.usersService.updateUserRefreshToken(user, null);
     response.clearCookie('Authentication');
     response.clearCookie('Refresh');
   }
 
-  private createToken(user: User, secretKey: string, expiresKey: string) {
+  private createToken(user: UserDto, secretKey: string, expiresKey: string) {
     const expiresTime = new Date(
       Date.now() + parseInt(this.configService.getOrThrow<string>(expiresKey)),
     );
 
     const tokenPayload: TokenPayload = {
-      userId: user.id.toString(),
+      userId: user.id,
     };
 
     const token = this.jwtService.sign(tokenPayload, {
@@ -66,7 +66,7 @@ export class AuthService {
     return { expiresTime, token };
   }
 
-  async verifyUser(email: string, password: string): Promise<User> {
+  async verifyUser(email: string, password: string): Promise<UserDto> {
     try {
       const user = await this.usersService.getUser({ email, id: null });
       const authenticated = await compare(password, user.password);

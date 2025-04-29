@@ -4,7 +4,6 @@ import * as schema from './schema';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { hash } from 'bcryptjs';
 import { eq } from 'drizzle-orm';
-import { User } from './dto/create-user.request';
 
 interface GetUserArgs {
   email: string | null;
@@ -47,7 +46,10 @@ export class UsersService {
       .values({ ...user, password: hashedPassword });
   }
 
-  async updateUserRefreshToken(user: User, token: string | null) {
+  async updateUserRefreshToken(
+    user: typeof schema.users.$inferInsert,
+    token: string | null,
+  ) {
     const hashedToken = token ? await hash(token, 10) : null;
     await this.database
       .update(schema.users)
@@ -55,7 +57,7 @@ export class UsersService {
       .where(eq(schema.users.email, user.email));
   }
 
-  async getUserMenus(user: User) {
+  async getUserMenus(user: typeof schema.users.$inferInsert) {
     return this.database.query.users.findFirst({
       where: eq(schema.users.email, user.email),
       with: {

@@ -1,10 +1,10 @@
 import { Controller, Post, Res, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { CurrentUser } from './utils/current-user.decorator';
-import { User } from '../users/dto/create-user.request';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { JwtRefreshAuthGuard } from './guards/jwt-refresh-auth.guard';
+import { UserDto } from '../utilities/types/UserDto';
 
 @Controller('auth')
 export class AuthController {
@@ -13,7 +13,7 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalAuthGuard)
   async login(
-    @CurrentUser() user: User,
+    @CurrentUser() user: UserDto,
     @Res({ passthrough: true }) response: Response,
   ) {
     await this.authService.login(user, response);
@@ -22,7 +22,7 @@ export class AuthController {
   @Post('logout')
   @UseGuards(JwtRefreshAuthGuard)
   async logout(
-    @CurrentUser() user: User,
+    @CurrentUser() user: UserDto,
     @Res({ passthrough: true }) response: Response,
   ) {
     await this.authService.logout(user, response);
@@ -31,7 +31,7 @@ export class AuthController {
   @Post('refresh')
   @UseGuards(JwtRefreshAuthGuard)
   async refresh(
-    @CurrentUser() user: User,
+    @CurrentUser() user: UserDto,
     @Res({ passthrough: true }) response: Response,
   ) {
     await this.authService.login(user, response);
